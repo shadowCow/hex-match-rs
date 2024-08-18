@@ -1,10 +1,10 @@
 use rand::thread_rng;
 use rand::seq::SliceRandom;
 
-use super::{board::{Board, Color, Suit, Tile}, card::CardStack};
+use super::{card::CardStack, grid::HexGrid, tile::{Color, Suit, Tile}};
 
 pub struct Game {
-    pub board: Board,
+    pub grid: HexGrid,
     pub tile_bag: TileBag,
     pub garden: Garden,
     pub easy_stack: CardStack,
@@ -22,10 +22,18 @@ impl Game {
 
         let garden = Garden::new(g1, g2, g3, g4);
 
-        let board = Board::new();
+        let mut grid = HexGrid::new();
+        grid.place(Tile::preset_one(), 0, 1);
+        grid.place(Tile::preset_two(), 4, 1);
+        grid.place(Tile::preset_three(), 0, 4);
+        grid.place(Tile::preset_four(), 4, 4);
+        grid.place(Tile::preset_five(), 2, 2);
+        grid.place(Tile::preset_six(), 1, 2);
+        grid.place(Tile::preset_seven(), 3, 2);
+        grid.place(Tile::preset_eight(), 2, 3);
 
         Game {
-            board,
+            grid,
             tile_bag,
             garden,
             easy_stack: CardStack::new_easy(),
@@ -127,5 +135,24 @@ mod tests {
 
     #[test]
     fn test_new_game() {
+        let game = Game::new();
+
+        // grid.place(Tile::preset_one(), 0, 1);
+        // grid.place(Tile::preset_two(), 4, 1);
+        // grid.place(Tile::preset_three(), 0, 4);
+        // grid.place(Tile::preset_four(), 4, 4);
+        // grid.place(Tile::preset_five(), 2, 2);
+        // grid.place(Tile::preset_six(), 1, 2);
+        // grid.place(Tile::preset_seven(), 3, 2);
+        // grid.place(Tile::preset_eight(), 2, 3);
+
+        assert_eq!(game.grid.item_at(0, 1), &Some(Tile::preset_one()));
+        assert_eq!(game.grid.item_at(4, 1), &Some(Tile::preset_two()));
+        assert_eq!(game.grid.item_at(0, 4), &Some(Tile::preset_three()));
+        assert_eq!(game.grid.item_at(4, 4), &Some(Tile::preset_four()));
+        assert_eq!(game.grid.item_at(2, 2), &Some(Tile::preset_five()));
+        assert_eq!(game.grid.item_at(1, 2), &Some(Tile::preset_six()));
+        assert_eq!(game.grid.item_at(3, 2), &Some(Tile::preset_seven()));
+        assert_eq!(game.grid.item_at(2, 3), &Some(Tile::preset_eight()));
     }
 }

@@ -1,6 +1,6 @@
 use std::io::{stdin, stdout, Write};
 
-use crate::hex::{board::{Color, Suit, Tile}, game::{Game, GameMove, Garden}};
+use crate::hex::{tile::{Color, Suit, Tile}, game::{Game, GameMove, Garden}};
 
 pub fn run() {
     let mut game = Game::new();
@@ -37,7 +37,7 @@ fn parse_move(move_text: &str) -> Option<GameMove> {
 }
 
 fn draw_game(game: &Game) {
-    let hex_one = render_hex(&game.board.tiles[0], 0);
+    let hex_one = render_hex(&game.grid.item_at(0, 1), 0);
     let garden = render_garden(&game.garden);
 
     println!("{}", hex_one);

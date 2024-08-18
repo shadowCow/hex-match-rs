@@ -1,7 +1,7 @@
 use rand::thread_rng;
 use rand::seq::SliceRandom;
 
-use super::board::{Color, Suit};
+use super::tile::{Color, Suit};
 
 pub struct Card {
     top: CardSlot,
