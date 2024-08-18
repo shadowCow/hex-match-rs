@@ -46,25 +46,25 @@ fn draw_game(game: &Game) {
 }
 
 fn render_hex(tile: &Option<Tile>, index: usize) -> String {
-    let top = " ___ ";
+    let top = "  _____  ";
+    let body_top = " /     \\ ";
     let tile_row = match tile {
-        Some(t) => format!("/ {} \\", render_tile(t)),
-        None => "/   \\".to_owned(),
+        Some(t) => format!("/   {}   \\", render_tile(t)),
+        None => "/       \\".to_owned(),
     };
     let index_row = if index < 10 {
-        format!("| {} |", index)
+        format!("\\   {}   /", index)
     } else {
-        format!("|{} |", index)
+        format!("\\  {}   /", index)
     };
-    let filler_row = "\\   /";
-    let bottom = " \u{203E}\u{203E}\u{203E} ";
+    let bottom = " \\_____/ ";
 
     format!(
         "{}\n{}\n{}\n{}\n{}\n",
         top,
+        body_top,
         tile_row,
         index_row,
-        filler_row,
         bottom,
     )
 }
