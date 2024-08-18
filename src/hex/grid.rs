@@ -55,12 +55,25 @@ impl HexGrid {
         }
     }
 
+    pub fn r(&self) -> usize {
+        R
+    }
+
+    pub fn q(&self) -> usize {
+        Q
+    }
+
     pub fn place(&mut self, tile: Tile, q: usize, r: usize) {
         self.tiles[Self::to_index(q, r)] = Slot::Filled(Some(tile));
     }
 
     pub fn hex_at(&self, q: usize, r: usize) -> &Slot {
-        &self.tiles[Self::to_index(q, r)]
+        let index = Self::to_index(q, r);
+        if index >= self.tiles.len() {
+            &Slot::Empty
+        } else {
+            &self.tiles[index]
+        }
     }
 
     pub fn item_at(&self, q: usize, r: usize) -> &Option<Tile> {
@@ -70,8 +83,92 @@ impl HexGrid {
         }
     }
 
+    pub fn has_neighbor_n(&self, q: usize, r: usize) -> bool {
+        Self::coords_n(q, r).is_some()
+    }
+
+    pub fn has_neighbor_nw(&self, q: usize, r: usize) -> bool {
+        Self::coords_nw(q, r).is_some()
+    }
+
+    pub fn has_neighbor_ne(&self, q: usize, r: usize) -> bool {
+        Self::coords_ne(q, r).is_some()
+    }
+
+    pub fn has_neighbor_sw(&self, q: usize, r: usize) -> bool {
+        Self::coords_sw(q, r).is_some()
+    }
+
+    pub fn has_neighbor_se(&self, q: usize, r: usize) -> bool {
+        Self::coords_se(q, r).is_some()
+    }
+
+    pub fn has_neighbor_s(&self, q: usize, r: usize) -> bool {
+        Self::coords_s(q, r).is_some()
+    }
+
     fn to_index(q: usize, r: usize) -> usize {
         (q * R) + r
+    }
+
+    pub fn is_even_col(q: usize) -> bool {
+        q % 2 == 0
+    }
+
+    pub fn is_odd_col(q: usize) -> bool {
+        !Self::is_even_col(q)
+    }
+
+    pub fn coords_n(q: usize, r: usize) -> Option<Coords> {
+        if r < 1 {
+            None
+        } else {
+            Some((q, r-1))
+        }
+    }
+
+    pub fn coords_nw(q: usize, r: usize) -> Option<Coords> {
+        match (q, r) {
+            (q, _) if q < 1 => None,
+            (q, r) if Self::is_even_col(q) && r < 1 => None,
+            (q, r) if Self::is_even_col(q) => Some((q-1, r+1)),
+            (q, r) => Some((q-1, r)),
+        }
+    }
+
+    pub fn coords_ne(q: usize, r: usize) -> Option<Coords> {
+        match (q, r) {
+            (q, _) if q >= Q-1 => None,
+            (q, r) if Self::is_even_col(q) && r < 1 => None,
+            (q, r) if Self::is_even_col(q) => Some((q+1, r+1)),
+            (q, r) => Some((q+1, r)),
+        }
+    }
+
+    pub fn coords_sw(q: usize, r: usize) -> Option<Coords> {
+        match (q, r) {
+            (q, _) if q < 1 => None,
+            (q, r) if Self::is_odd_col(q) && r >= R-1 => None,
+            (q, r) if Self::is_even_col(q) => Some((q-1, r)),
+            (q, r) => Some((q-1, r+1)),
+        }
+    }
+
+    pub fn coords_se(q: usize, r: usize) -> Option<Coords> {
+        match (q, r) {
+            (q, _) if q >= Q-1 => None,
+            (q, r) if Self::is_odd_col(q) && r >= R-1 => None,
+            (q, r) if Self::is_even_col(q) => Some((q+1, r)),
+            (q, r) => Some((q+1, r+1)),
+        }
+    }
+
+    pub fn coords_s(q: usize, r: usize) -> Option<Coords> {
+        if r >= R-1 {
+            None
+        } else {
+            Some((q, r+1))
+        }
     }
 }
 
@@ -80,6 +177,8 @@ pub enum Slot {
     Empty,
     Filled(Option<Tile>),
 }
+
+pub type Coords = (usize, usize);
 
 #[cfg(test)]
 mod tests {
