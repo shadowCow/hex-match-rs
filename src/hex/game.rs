@@ -4,12 +4,12 @@ use rand::seq::SliceRandom;
 use super::{board::{Board, Color, Suit, Tile}, card::CardStack};
 
 pub struct Game {
-    board: Board,
-    tile_bag: TileBag,
-    garden: Garden,
-    easy_stack: CardStack,
-    medium_stack: CardStack,
-    hard_stack: CardStack,
+    pub board: Board,
+    pub tile_bag: TileBag,
+    pub garden: Garden,
+    pub easy_stack: CardStack,
+    pub medium_stack: CardStack,
+    pub hard_stack: CardStack,
 }
 
 impl Game {
@@ -53,7 +53,7 @@ pub enum Player {
 }
 
 pub struct Garden {
-    tiles: [Tile; 4],
+    pub tiles: [Tile; 4],
 }
 
 impl Garden {

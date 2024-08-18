@@ -1,6 +1,6 @@
 #[derive(Debug, PartialEq, Eq)]
 pub struct Board {
-    tiles: [Option<Tile>; 24],
+    pub tiles: [Option<Tile>; 24],
     edges: [Vec<usize>; 24],
 }
 
@@ -74,8 +74,8 @@ impl Board {
 
 #[derive(Debug, PartialEq, Eq, Copy, Clone)]
 pub struct Tile {
-    color: Color,
-    suit: Suit,
+    pub color: Color,
+    pub suit: Suit,
 }
 
 impl Tile {
