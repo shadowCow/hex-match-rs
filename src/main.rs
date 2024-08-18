@@ -1,3 +1,7 @@
+
+mod hex;
+mod ui;
+
 fn main() {
-    println!("Hello, world!");
+    ui::run();
 }
