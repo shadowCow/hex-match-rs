@@ -1,4 +1,4 @@
-use std::io::{stdin, stdout, Write};
+use std::{fmt, io::{stdin, stdout, Write}, str::FromStr};
 
 use crate::hex::{game::{Game, GameMove, Garden}, grid::{Coords, HexGrid, Slot}, tile::{Color, Suit, Tile}};
 
@@ -27,13 +27,32 @@ pub fn run() {
             break;
         }
 
-        println!("You entered: {}", input);
+        let game_move = parse_move(input);
+        match game_move {
+            Some(m) => game.make_move(m),
+            None => println!("invalid move"),
+        }
     }
 }
 
 fn parse_move(move_text: &str) -> Option<GameMove> {
+    let tokens: Vec<&str> = move_text.split(" ")
+        .collect();
 
-    None
+    match tokens.first() {
+        Some(t) => match *t {
+            "place" => {
+                let color: Color = tokens[1].parse().expect("color bad");
+                let suit: Suit = tokens[2].parse().expect("suit bad");
+                let to_q: usize = tokens[3].parse().expect("q bad");
+                let to_r: usize = tokens[4].parse().expect("r bad");
+                
+                Some(GameMove::PlaceTile { tile: Tile::new(color, suit), q: to_q, r: to_r })
+            },
+            _ => None,
+        },
+        None => None,
+    }
 }
 
 fn draw_game(game: &Game) {
@@ -447,6 +466,53 @@ fn line_three_interior(tile: &Option<Tile>) -> String {
     }
 }
 
+impl FromStr for Color {
+    type Err = ParseColorError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().as_str() {
+            "red" => Ok(Color::Red),
+            "pink" => Ok(Color::Pink),
+            "purple" => Ok(Color::Purple),
+            "yellow" => Ok(Color::Yellow),
+            _ => Err(ParseColorError),
+        }
+    }
+}
+
+
+#[derive(Debug)]
+pub struct ParseColorError;
+
+impl fmt::Display for ParseColorError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Invalid color string")
+    }
+}
+
+
+impl FromStr for Suit {
+    type Err = ParseSuitError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        match s.to_lowercase().as_str() {
+            "club" => Ok(Suit::Club),
+            "diamond" => Ok(Suit::Diamond),
+            "heart" => Ok(Suit::Heart),
+            "spade" => Ok(Suit::Spade),
+            _ => Err(ParseSuitError),
+        }
+    }
+}
+
+#[derive(Debug)]
+pub struct ParseSuitError;
+
+impl fmt::Display for ParseSuitError {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Invalid suit string")
+    }
+}
 
 
 /*

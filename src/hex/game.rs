@@ -43,12 +43,17 @@ impl Game {
     }
 
     pub fn make_move(&mut self, m: GameMove) {
-
+        match m {
+            GameMove::PlaceTile { tile, q, r } => {
+                self.grid.place(tile, q, r);
+            },
+            _ => {},
+        }
     }
 }
 
 pub enum GameMove {
-    PlaceTile { tile: Tile, index: usize },
+    PlaceTile { tile: Tile, q: usize, r: usize },
     PlaceCubes { player: Player, count: u8 },
 }
 
